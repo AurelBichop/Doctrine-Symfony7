@@ -2,56 +2,59 @@
 
 namespace App\Repository;
 
-use App\Model\Starship;
-use App\Model\StarshipStatusEnum;
-use Psr\Log\LoggerInterface;
+use App\Entity\Starship;
+use App\Entity\StarshipStatusEnum;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
 
-class StarshipRepository
+/**
+ * @extends ServiceEntityRepository<Starship>
+ */
+class StarshipRepository extends ServiceEntityRepository
 {
-    public function __construct(private LoggerInterface $logger)
+    public function __construct(ManagerRegistry $registry)
     {
+        parent::__construct($registry, Starship::class);
     }
 
-    public function findAll(): array
+    public function findMyShip(): Starship
     {
-        $this->logger->info('Starship collection retrieved');
-
-        return [
-            new Starship(
-                1,
-                'USS LeafyCruiser (NCC-0001)',
-                'Garden',
-                'Jean-Luc Pickles',
-                StarshipStatusEnum::IN_PROGRESS,
-                new \DateTimeImmutable()
-            ),
-            new Starship(
-                2,
-                'USS Espresso (NCC-1234-C)',
-                'Latte',
-                'James T. Quick!',
-                StarshipStatusEnum::COMPLETED,
-                new \DateTimeImmutable()
-            ),
-            new Starship(
-                3,
-                'USS Wanderlust (NCC-2024-W)',
-                'Delta Tourist',
-                'Kathryn Journeyway',
-                StarshipStatusEnum::WAITING,
-                new \DateTimeImmutable()
-            ),
-        ];
+        return $this->findAll()[0];
     }
 
-    public function find(int $id): ?Starship
+    /**
+     * @return Starship[]
+     */
+    public function findIncomplete(): array
     {
-        foreach ($this->findAll() as $starship) {
-            if ($starship->getId() === $id) {
-                return $starship;
-            }
-        }
-
-        return null;
+        return $this->createQueryBuilder('s')
+            ->where('s.status != :status')
+            ->setParameter('status', StarshipStatusEnum::COMPLETED)
+            ->getQuery()
+            ->getResult();
     }
+//    /**
+//     * @return Starship[] Returns an array of Starship objects
+//     */
+//    public function findByExampleField($value): array
+//    {
+//        return $this->createQueryBuilder('s')
+//            ->andWhere('s.exampleField = :val')
+//            ->setParameter('val', $value)
+//            ->orderBy('s.id', 'ASC')
+//            ->setMaxResults(10)
+//            ->getQuery()
+//            ->getResult()
+//        ;
+//    }
+
+//    public function findOneBySomeField($value): ?Starship
+//    {
+//        return $this->createQueryBuilder('s')
+//            ->andWhere('s.exampleField = :val')
+//            ->setParameter('val', $value)
+//            ->getQuery()
+//            ->getOneOrNullResult()
+//        ;
+//    }
 }
