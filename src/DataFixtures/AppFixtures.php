@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Starship;
 use App\Entity\StarshipStatusEnum;
+use App\Factory\StarshipFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -11,6 +12,9 @@ class AppFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
+        StarshipFactory::createMany(20);
+
+        /*
         $ship1 = new Starship();
         $ship1
             ->setName('USS LeafyCruiser (NCC-0001)')
@@ -42,6 +46,6 @@ class AppFixtures extends Fixture
         $manager->persist($ship2);
         $manager->persist($ship3);
 
-        $manager->flush();
+        $manager->flush();*/
     }
 }
