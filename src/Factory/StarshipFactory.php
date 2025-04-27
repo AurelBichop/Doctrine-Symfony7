@@ -4,22 +4,18 @@ namespace App\Factory;
 
 use App\Entity\Starship;
 use App\Entity\StarshipStatusEnum;
-use App\Repository\StarshipRepository;
-use Doctrine\ORM\EntityRepository;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
-use Zenstruck\Foundry\Persistence\Proxy;
-use Zenstruck\Foundry\Persistence\ProxyRepositoryDecorator;
 
 /**
  * @extends PersistentProxyObjectFactory<Starship>
  */
-final class StarshipFactory extends PersistentProxyObjectFactory{
+final class StarshipFactory extends PersistentProxyObjectFactory
+{
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
      *
      * @todo inject services if required
      */
-
     private const SHIP_NAMES = [
         'Nebula Drifter',
         'Quantum Voyager',
@@ -99,7 +95,6 @@ final class StarshipFactory extends PersistentProxyObjectFactory{
         'Vale Shadow',
     ];
 
-
     public function __construct()
     {
     }
@@ -109,14 +104,15 @@ final class StarshipFactory extends PersistentProxyObjectFactory{
         return Starship::class;
     }
 
-        /**
+    /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#model-factories
      *
      * @todo add your default values here
      */
-    protected function defaults(): array|callable    {
+    protected function defaults(): array|callable
+    {
         return [
-            'arrivedAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTimeBetween('-1 year','now')),
+            'arrivedAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTimeBetween('-1 year', 'now')),
             'captain' => self::faker()->randomElement(self::CAPTAINS),
             'class' => self::faker()->randomElement(self::CLASSES),
             'name' => self::faker()->randomElement(self::SHIP_NAMES),
@@ -124,7 +120,7 @@ final class StarshipFactory extends PersistentProxyObjectFactory{
         ];
     }
 
-        /**
+    /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#initialization
      */
     protected function initialize(): static

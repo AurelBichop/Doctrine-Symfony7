@@ -106,5 +106,4 @@ class Starship
 
         return $this;
     }
-
 }
